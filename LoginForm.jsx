@@ -15,14 +15,18 @@ function isValidPassword(value) {
   return typeof value === "string" && value.length >= 6;
 }
 
-export default function LoginForm() {
+export default function LoginForm({ 
+  onForgotPassword = () => console.log("Navigate to forgot password"),
+  onSignUp = () => console.log("Navigate to sign up")
+} = {}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  function handleLogin(e) {
+  async function handleLogin(e) {
     e.preventDefault();
     const nextErrors = { email: "", password: "" };
 
@@ -39,11 +43,18 @@ export default function LoginForm() {
       return;
     }
 
+    setIsLoading(true);
+    
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
     console.log("Login credentials:", { 
       email: email.trim(), 
       password,
       rememberMe 
     });
+    
+    setIsLoading(false);
   }
 
   return (
@@ -122,7 +133,7 @@ export default function LoginForm() {
         )}
       </div>
 
-      <div className="mb-6">
+      <div className="mb-6 flex items-center justify-between">
         <label className="flex items-center">
           <input
             type="checkbox"
@@ -132,14 +143,61 @@ export default function LoginForm() {
           />
           <span className="ml-2 text-sm text-gray-700">Remember me</span>
         </label>
+        <button
+          type="button"
+          onClick={onForgotPassword}
+          className="text-sm text-blue-600 hover:text-blue-800 focus:outline-none focus:underline"
+        >
+          Forgot password?
+        </button>
       </div>
 
       <button
         type="submit"
-        className="w-full py-2 px-4 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+        disabled={isLoading}
+        className="w-full py-2 px-4 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed flex items-center justify-center"
       >
-        Log in
+        {isLoading ? (
+          <>
+            <svg 
+              className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" 
+              xmlns="http://www.w3.org/2000/svg" 
+              fill="none" 
+              viewBox="0 0 24 24"
+            >
+              <circle 
+                className="opacity-25" 
+                cx="12" 
+                cy="12" 
+                r="10" 
+                stroke="currentColor" 
+                strokeWidth="4"
+              />
+              <path 
+                className="opacity-75" 
+                fill="currentColor" 
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              />
+            </svg>
+            Logging in...
+          </>
+        ) : (
+          'Log in'
+        )}
       </button>
+
+      <div className="mt-6 text-center">
+        <p className="text-sm text-gray-600">
+          Don't have an account?{' '}
+          <button
+            type="button"
+            onClick={onSignUp}
+            className="text-blue-600 hover:text-blue-800 font-medium focus:outline-none focus:underline"
+          >
+            Sign up
+          </button>
+        </p>
+      </div>
     </form>
   );
 }
