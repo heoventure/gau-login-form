@@ -61,9 +61,14 @@ export default function LoginForm({
     }
     
     // Autofocus email field for better UX
-    if (emailInputRef.current) {
-      emailInputRef.current.focus();
-    }
+    // This reduces the friction for users to start typing, which decreases bounce rate
+    const timer = setTimeout(() => {
+      if (emailInputRef.current) {
+        emailInputRef.current.focus();
+      }
+    }, 100);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   // Track field focus
@@ -87,7 +92,7 @@ export default function LoginForm({
 
   async function handleLogin(e) {
     e.preventDefault();
-    const nextErrors = { email: "", password: "" };
+    const nextErrors = { email: "", password: "", general: "" };
 
     // Mark all fields as touched
     setTouched({ email: true, password: true });
@@ -103,33 +108,55 @@ export default function LoginForm({
 
     if (nextErrors.email || nextErrors.password) {
       metricsTracker.trackInteraction('validation_error');
+      metricsTracker.trackSubmission(false, nextErrors.email ? 'invalid_email' : 'invalid_password');
       return;
     }
 
     setIsLoading(true);
     metricsTracker.trackInteraction('login_attempt');
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 100));
-    
-    console.log("Login credentials:", { 
-      email: email.trim(), 
-      password,
-      rememberMe 
-    });
-    
-    metricsTracker.trackSubmission(true);
-    setIsLoading(false);
+    try {
+      // Simulate API call
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          // Add some randomness to simulate real API failures or slow responses
+          if (Math.random() < 0.1) {
+            reject(new Error("Network connection error. Please try again."));
+          } else if (email === "error@example.com") {
+            reject(new Error("Invalid email or password."));
+          } else {
+            resolve();
+          }
+        }, 800);
+      });
+      
+      console.log("Login credentials:", { 
+        email: email.trim(), 
+        password,
+        rememberMe 
+      });
+      
+      metricsTracker.trackSubmission(true);
+    } catch (err) {
+      setErrors(prev => ({ ...prev, general: err.message }));
+      metricsTracker.trackSubmission(false, 'api_error: ' + err.message);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   function handleInputChange(field, value) {
     if (field === 'email') {
       setEmail(value);
-      if (errors.email) setErrors(prev => ({ ...prev, email: "" }));
+      if (errors.email || errors.general) {
+        setErrors(prev => ({ ...prev, email: "", general: "" }));
+      }
       metricsTracker.trackInteraction('email_input');
     } else if (field === 'password') {
       setPassword(value);
-      if (errors.password) setErrors(prev => ({ ...prev, password: "" }));
+      if (errors.password || errors.general) {
+        setErrors(prev => ({ ...prev, password: "", general: "" }));
+      }
       metricsTracker.trackInteraction('password_input');
     }
   }
@@ -156,6 +183,18 @@ export default function LoginForm({
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Sign in to your account</h1>
         <p className="text-sm text-gray-500">Enter your details to continue</p>
       </div>
+
+      {errors.general && (
+        <div 
+          className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3 text-red-700 animate-in fade-in duration-300"
+          role="alert"
+        >
+          <svg className="w-5 h-5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span className="text-sm font-medium">{errors.general}</span>
+        </div>
+      )}
 
       <div className="mb-5">
         <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
