@@ -161,14 +161,14 @@ describe('MetricsTracker', () => {
   });
 
   describe('Engagement Rate', () => {
-    test('should calculate high engagement with many interactions', () => {
+    test('should calculate 100% engagement with any interactions', () => {
       metricsTracker.trackPageView();
       metricsTracker.trackInteraction('email');
       metricsTracker.trackInteraction('password');
       metricsTracker.trackSubmission(true);
       
       const metrics = metricsTracker.getMetrics();
-      expect(metrics.engagementRate).toBeGreaterThan(100); // Multiple interactions per page view
+      expect(metrics.engagementRate).toBe(100); // Session is engaged
     });
 
     test('should calculate 0% engagement with no interactions', () => {
