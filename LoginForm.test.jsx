@@ -16,13 +16,13 @@ describe('LoginForm', () => {
     
     // Check for password input
     expect(screen.getByLabelText("Password", {selector: "input"})).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('••••••••')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Enter your password')).toBeInTheDocument();
     
     // Check for Remember Me checkbox
     expect(screen.getByLabelText(/remember me/i)).toBeInTheDocument();
     
     // Check for submit button
-    expect(screen.getByRole('button', { name: 'Log in' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Sign in' })).toBeInTheDocument();
   });
 
   test('renders show/hide password toggle button', () => {
@@ -58,7 +58,7 @@ describe('LoginForm', () => {
     render(<LoginForm />);
     
     const emailInput = screen.getByLabelText(/email address/i);
-    const submitButton = screen.getByRole('button', { name: 'Log in' });
+    const submitButton = screen.getByRole('button', { name: 'Sign in' });
     
     // Submit with invalid email (and empty password)
     fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
@@ -73,7 +73,7 @@ describe('LoginForm', () => {
     
     const emailInput = screen.getByLabelText(/email address/i);
     const passwordInput = screen.getByLabelText("Password", {selector: "input"});
-    const submitButton = screen.getByRole('button', { name: 'Log in' });
+    const submitButton = screen.getByRole('button', { name: 'Sign in' });
     
     // Enter valid email but short password
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
@@ -88,7 +88,7 @@ describe('LoginForm', () => {
     render(<LoginForm />);
     
     const emailInput = screen.getByLabelText(/email address/i);
-    const submitButton = screen.getByRole('button', { name: 'Log in' });
+    const submitButton = screen.getByRole('button', { name: 'Sign in' });
     
     // Trigger email error
     fireEvent.click(submitButton);
@@ -123,7 +123,7 @@ describe('LoginForm', () => {
     const emailInput = screen.getByLabelText(/email address/i);
     const passwordInput = screen.getByLabelText("Password", {selector: "input"});
     const rememberMeCheckbox = screen.getByLabelText(/remember me/i);
-    const submitButton = screen.getByRole('button', { name: 'Log in' });
+    const submitButton = screen.getByRole('button', { name: 'Sign in' });
     
     // Fill in valid data
     fireEvent.change(emailInput, { target: { value: 'user@example.com' } });
@@ -164,7 +164,7 @@ describe('LoginForm', () => {
     render(<LoginForm />);
     
     const emailInput = screen.getByLabelText(/email address/i);
-    const submitButton = screen.getByRole('button', { name: 'Log in' });
+    const submitButton = screen.getByRole('button', { name: 'Sign in' });
     
     // Submit with empty email
     fireEvent.click(submitButton);
@@ -213,7 +213,7 @@ describe('LoginForm', () => {
     
     const emailInput = screen.getByLabelText(/email address/i);
     const passwordInput = screen.getByLabelText("Password", {selector: "input"});
-    const submitButton = screen.getByRole('button', { name: 'Log in' });
+    const submitButton = screen.getByRole('button', { name: 'Sign in' });
     
     // Fill in valid data
     fireEvent.change(emailInput, { target: { value: 'user@example.com' } });
@@ -228,7 +228,7 @@ describe('LoginForm', () => {
     
     // Wait for loading to complete
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Log in' })).not.toBeDisabled();
+      expect(screen.getByRole('button', { name: 'Sign in' })).not.toBeDisabled();
     });
   });
 
@@ -237,7 +237,7 @@ describe('LoginForm', () => {
     
     const emailInput = screen.getByLabelText(/email address/i);
     const passwordInput = screen.getByLabelText("Password", {selector: "input"});
-    const submitButton = screen.getByRole('button', { name: 'Log in' });
+    const submitButton = screen.getByRole('button', { name: 'Sign in' });
     
     // Initially not disabled
     expect(submitButton).not.toBeDisabled();
