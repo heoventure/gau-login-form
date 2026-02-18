@@ -68,22 +68,23 @@ class MetricsTracker {
     ).length;
     const interactions = this.events.filter(e => e.type === 'interaction').length;
 
-    // Count bounces: explicit bounces OR (pageViews without interactions when no explicit bounce tracked)
+    // A session is considered engaged if there was at least one interaction or submission
+    const engagedSessions = (this.hasInteracted || submissions > 0 || interactions > 0) ? 1 : 0;
+
+    // Count bounces: explicit bounces OR (pageViews - engagedSessions)
+    // In a multi-session environment, we'd track this per session ID.
+    // For this simple tracker, we'll use a more logical approach:
+    // If no interaction occurred, all page views are bounces.
     let bounces = explicitBounces;
-    if (pageViews > 0 && !this.hasInteracted && explicitBounces === 0 && submissions === 0) {
-      // Only auto-count as bounce if:
-      // - User viewed the page
-      // - Never interacted
-      // - No explicit bounce was tracked
-      // - No submissions occurred
-      bounces = 1;
+    if (pageViews > 0 && !this.hasInteracted && submissions === 0) {
+      bounces = Math.max(explicitBounces, pageViews);
     }
 
-    // Calculate bounce rate: users who left without meaningful interaction
+    // Calculate bounce rate
     const bounceRate = pageViews > 0 ? (bounces / pageViews) * 100 : 0;
     
-    // Calculate engagement rate: users who interacted or submitted
-    const engagementRate = pageViews > 0 ? ((interactions + submissions) / pageViews) * 100 : 0;
+    // Calculate engagement rate: % of page views that resulted in at least one interaction
+    const engagementRate = pageViews > 0 ? (engagedSessions / pageViews) * 100 : 0;
 
     return {
       pageViews,
