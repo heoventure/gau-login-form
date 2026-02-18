@@ -8,14 +8,14 @@ describe('LoginForm', () => {
     render(<LoginForm />);
     
     // Check for form title
-    expect(screen.getByRole('heading', { name: /log in/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /welcome back/i })).toBeInTheDocument();
     
     // Check for email input
-    expect(screen.getByLabelText('Email')).toBeInTheDocument();
+    expect(screen.getByLabelText(/email address/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText('you@example.com')).toBeInTheDocument();
     
     // Check for password input
-    expect(screen.getByLabelText('Password')).toBeInTheDocument();
+    expect(screen.getByLabelText("Password", {selector: "input"})).toBeInTheDocument();
     expect(screen.getByPlaceholderText('••••••••')).toBeInTheDocument();
     
     // Check for Remember Me checkbox
@@ -36,7 +36,7 @@ describe('LoginForm', () => {
   test('toggles password visibility when clicking show/hide button', () => {
     render(<LoginForm />);
     
-    const passwordInput = screen.getByLabelText('Password');
+    const passwordInput = screen.getByLabelText("Password", {selector: "input"});
     const toggleButton = screen.getByLabelText(/show password/i);
     
     // Initially password should be hidden
@@ -57,7 +57,7 @@ describe('LoginForm', () => {
     // and "displays clear error message for short password" tests
     render(<LoginForm />);
     
-    const emailInput = screen.getByLabelText('Email');
+    const emailInput = screen.getByLabelText(/email address/i);
     const submitButton = screen.getByRole('button', { name: 'Log in' });
     
     // Submit with invalid email (and empty password)
@@ -71,8 +71,8 @@ describe('LoginForm', () => {
   test('displays clear error message for short password', () => {
     render(<LoginForm />);
     
-    const emailInput = screen.getByLabelText('Email');
-    const passwordInput = screen.getByLabelText('Password');
+    const emailInput = screen.getByLabelText(/email address/i);
+    const passwordInput = screen.getByLabelText("Password", {selector: "input"});
     const submitButton = screen.getByRole('button', { name: 'Log in' });
     
     // Enter valid email but short password
@@ -87,7 +87,7 @@ describe('LoginForm', () => {
   test('clears error messages when user starts typing', () => {
     render(<LoginForm />);
     
-    const emailInput = screen.getByLabelText('Email');
+    const emailInput = screen.getByLabelText(/email address/i);
     const submitButton = screen.getByRole('button', { name: 'Log in' });
     
     // Trigger email error
@@ -120,8 +120,8 @@ describe('LoginForm', () => {
     const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
     render(<LoginForm />);
     
-    const emailInput = screen.getByLabelText('Email');
-    const passwordInput = screen.getByLabelText('Password');
+    const emailInput = screen.getByLabelText(/email address/i);
+    const passwordInput = screen.getByLabelText("Password", {selector: "input"});
     const rememberMeCheckbox = screen.getByLabelText(/remember me/i);
     const submitButton = screen.getByRole('button', { name: 'Log in' });
     
@@ -150,20 +150,20 @@ describe('LoginForm', () => {
 
   test('email field has proper autocomplete attribute', () => {
     render(<LoginForm />);
-    const emailInput = screen.getByLabelText('Email');
+    const emailInput = screen.getByLabelText(/email address/i);
     expect(emailInput).toHaveAttribute('autocomplete', 'email');
   });
 
   test('password field has proper autocomplete attribute', () => {
     render(<LoginForm />);
-    const passwordInput = screen.getByLabelText('Password');
+    const passwordInput = screen.getByLabelText("Password", {selector: "input"});
     expect(passwordInput).toHaveAttribute('autocomplete', 'current-password');
   });
 
   test('error styling is applied to invalid fields', () => {
     render(<LoginForm />);
     
-    const emailInput = screen.getByLabelText('Email');
+    const emailInput = screen.getByLabelText(/email address/i);
     const submitButton = screen.getByRole('button', { name: 'Log in' });
     
     // Submit with empty email
@@ -211,8 +211,8 @@ describe('LoginForm', () => {
   test('shows loading state during form submission', async () => {
     render(<LoginForm />);
     
-    const emailInput = screen.getByLabelText('Email');
-    const passwordInput = screen.getByLabelText('Password');
+    const emailInput = screen.getByLabelText(/email address/i);
+    const passwordInput = screen.getByLabelText("Password", {selector: "input"});
     const submitButton = screen.getByRole('button', { name: 'Log in' });
     
     // Fill in valid data
@@ -235,8 +235,8 @@ describe('LoginForm', () => {
   test('submit button is disabled during loading', async () => {
     render(<LoginForm />);
     
-    const emailInput = screen.getByLabelText('Email');
-    const passwordInput = screen.getByLabelText('Password');
+    const emailInput = screen.getByLabelText(/email address/i);
+    const passwordInput = screen.getByLabelText("Password", {selector: "input"});
     const submitButton = screen.getByRole('button', { name: 'Log in' });
     
     // Initially not disabled
