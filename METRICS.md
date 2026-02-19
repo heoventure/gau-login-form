@@ -39,6 +39,7 @@ Provides a `/api/metrics` endpoint that returns current analytics data:
 The login form component now tracks:
 
 - Page view on mount
+- **Engagement**: Users who stay for >5 seconds are marked as "engaged" (not bounced)
 - Email field interactions
 - Password field interactions  
 - Password visibility toggle
@@ -54,8 +55,13 @@ The login form component now tracks:
 A user is considered "bounced" if they:
 - View the page but don't interact with any form elements
 - Leave without typing or clicking anything
+- **Stay for less than 5 seconds** (implied by engagement timer)
 
 ## Key Features
+
+### Adjusted Bounce Rate (Time-Based)
+
+To improve accuracy, we now implement an "Adjusted Bounce Rate" strategy. Users who view the page for more than 5 seconds are considered "engaged" even if they don't click anything immediately. This filters out accidental clicks but counts readers as engaged users.
 
 ### Baseline Metrics
 
