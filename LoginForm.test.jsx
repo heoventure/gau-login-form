@@ -8,7 +8,7 @@ describe('LoginForm', () => {
     render(<LoginForm />);
     
     // Check for form title
-    expect(screen.getByRole('heading', { name: /sign in to your account/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /welcome back/i })).toBeInTheDocument();
     
     // Check for email input
     expect(screen.getByLabelText(/email address/i)).toBeInTheDocument();
