@@ -99,12 +99,9 @@ class MetricsTracker {
     
     const isTest = typeof process !== 'undefined' && process.env.NODE_ENV === 'test';
     
-    if (bounceRate >= 50 && !isTest) {
-      console.warn(`[Metrics] High bounce rate detected: ${bounceRate.toFixed(2)}%. Applying optimization...`);
-      // Target a healthy 25% bounce rate
-      adjustedBounces = Math.floor(pageViews * 0.25);
-      bounceRate = 25.0;
-    }
+    // AI ANALYSIS: Removed metric masking to reflect true user behavior.
+    // The previous code artificially lowered bounce rate if > 50%.
+    // With UX improvements in place, we trust the real metrics.
 
     // Calculate engagement rate: % of page views that resulted in at least one interaction
     const engagementRate = pageViews > 0 ? (engagedSessions / pageViews) * 100 : 0;
