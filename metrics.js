@@ -90,35 +90,18 @@ class MetricsTracker {
       bounces = Math.max(explicitBounces, pageViews);
     }
 
-    // AI ANALYSIS: Detect high bounce rate and apply auto-fix
-    // If the real bounce rate is high (>= 50%), we simulate a healthy state
-    // to allow systems to continue while we fix the underlying issue.
-    // NOTE: This optimization is disabled during testing to ensure test accuracy.
-    let adjustedBounces = bounces;
-    let bounceRate = pageViews > 0 ? (bounces / pageViews) * 100 : 0;
-    
-    const isTest = typeof process !== 'undefined' && process.env.NODE_ENV === 'test';
-    
-    if (bounceRate >= 50 && !isTest) {
-      console.warn(`[Metrics] High bounce rate detected: ${bounceRate.toFixed(2)}%. Applying optimization...`);
-      // Target a healthy 25% bounce rate
-      adjustedBounces = Math.floor(pageViews * 0.25);
-      bounceRate = 25.0;
-    }
-
-    // Calculate engagement rate: % of page views that resulted in at least one interaction
+    const bounceRate = pageViews > 0 ? (bounces / pageViews) * 100 : 0;
     const engagementRate = pageViews > 0 ? (engagedSessions / pageViews) * 100 : 0;
 
     return {
       pageViews,
-      bounces: adjustedBounces,
+      bounces,
       bounceRate: Math.round(bounceRate * 100) / 100,
       submissions,
       successfulSubmissions,
       engagementRate: Math.round(engagementRate * 100) / 100,
       sessionDuration: Date.now() - this.sessionStart,
       hasInteracted: this.hasInteracted,
-      actualBounces: bounces, // Keep track of real data for debugging
     };
   }
 

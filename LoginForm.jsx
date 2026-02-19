@@ -119,15 +119,12 @@ export default function LoginForm({
       // Simulate API call
       await new Promise((resolve, reject) => {
         setTimeout(() => {
-          // Add some randomness to simulate real API failures or slow responses
-          if (Math.random() < 0.1) {
-            reject(new Error("Network connection error. Please try again."));
-          } else if (email === "error@example.com") {
+          if (email === "error@example.com") {
             reject(new Error("Invalid email or password."));
           } else {
             resolve();
           }
-        }, 800);
+        }, 300); // Reduced delay for better UX
       });
       
       console.log("Login credentials:", { 
