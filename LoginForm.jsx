@@ -60,10 +60,10 @@ export default function LoginForm({
       hasTrackedPageView.current = true;
     }
     
-    // Autofocus email field for better UX
-    // This reduces the friction for users to start typing, which decreases bounce rate
+    // Autofocus email field on desktop for better UX
+    // Avoid autofocus on mobile to prevent virtual keyboard from covering the screen
     const timer = setTimeout(() => {
-      if (emailInputRef.current) {
+      if (emailInputRef.current && window.innerWidth >= 768) {
         emailInputRef.current.focus();
       }
     }, 100);
@@ -119,15 +119,12 @@ export default function LoginForm({
       // Simulate API call
       await new Promise((resolve, reject) => {
         setTimeout(() => {
-          // Add some randomness to simulate real API failures or slow responses
-          if (Math.random() < 0.1) {
-            reject(new Error("Network connection error. Please try again."));
-          } else if (email === "error@example.com") {
+          if (email === "error@example.com") {
             reject(new Error("Invalid email or password."));
           } else {
             resolve();
           }
-        }, 800);
+        }, 300);
       });
       
       console.log("Login credentials:", { 
