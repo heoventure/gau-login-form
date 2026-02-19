@@ -178,10 +178,10 @@ export default function LoginForm({
       className="w-full max-w-md mx-auto p-6 sm:p-8 bg-white rounded-xl shadow-xl border border-gray-100"
       aria-label="Login form"
     >
-      {/* Simplified header */}
-      <div className="mb-8 text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Sign in to your account</h1>
-        <p className="text-sm text-gray-500">Enter your details to continue</p>
+      {/* Simplified header with welcoming tone */}
+      <div className="mb-8 text-center animate-fade-in">
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">Welcome back!</h1>
+        <p className="text-sm text-gray-500">Sign in to continue your journey</p>
       </div>
 
       {errors.general && (
